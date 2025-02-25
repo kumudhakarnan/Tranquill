@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-export default function q2() {
+export default function Q2() {
   const navigation = useNavigation();
 
   return (

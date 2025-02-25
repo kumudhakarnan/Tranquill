@@ -10,7 +10,7 @@ export default function Welcome({ navigation }) {
     <View style={styles.container}>
       <Image source={require('../assets/tq.png')} style={styles.logo} />
       <Text style={styles.message}>
-        Hi, my name is Suzu! I'm very excited to begin our journey together! Let's support each other by having fun and upgrading ourselves into a better person!
+       TRANQUIL 💜
       </Text>
       <View style={styles.buttonContainer}>
         <Button title="BEGIN:)" onPress={handleMove} />

@@ -1,30 +1,32 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-export default function Q3() {
+export default function Q7() {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you feel overwhelmed?
+      How frequently do you experience feelings of sadness or emptiness?
       </Text>
 
       {/* Options */}
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😄 Rarely</Text>
+      <Pressable style={styles.option}onPress={()=> alert('great response')}
+        
+        >
+        <Text style={styles.optionText}>😄 Almost never </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>🙂 Sometimes</Text>
+        <Text style={styles.optionText}>🙂 Occaionally</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😕 Often</Text>
+        <Text style={styles.optionText}>😕 Frequently </Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😫 Almost always</Text>
+      <Pressable style={styles.option} onPress={()=> alert('great response')}>
+        <Text style={styles.optionText}>😫 Almost all the time </Text>
       </Pressable>
 
       {/* Move Button */}
-      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q4')}>
+      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q8')}>
         <Text style={styles.moveButtonText}>move :)</Text>
       </Pressable>
     </View>

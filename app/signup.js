@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import {createUserWithEmailAndPassword} from 'firebase/auth'
+import auth from '../services/firebaseauth'
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error,setError] = useState('');
   const navigation = useNavigation();
 
   const handleSignup = () => {
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    alert('Signup button clicked!');
-    // Add your signup logic here (e.g., API call)
+    
+   
+    createUserWithEmailAndPassword(auth,email,password)
+    .then((userCredential) => {
+          const user = userCredential.user; 
+          navigation.navigate("pg1");
+      })
+      .catch((error) => {
+        setError(error.message)
+      })
+    
   };
 
   return (
@@ -24,7 +32,7 @@ export default function Signup() {
         style={styles.input}
         placeholder="Enter Name"
         value={name}
-        onChangeText={(text) => setName(text)}
+        onChangeText={setName}
       />
 
       <TextInput
@@ -32,7 +40,7 @@ export default function Signup() {
         placeholder="Enter Email"
         keyboardType="email-address"
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={setEmail}
       />
 
       <TextInput
@@ -40,16 +48,18 @@ export default function Signup() {
         placeholder="Enter Password"
         secureTextEntry
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={setPassword}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
+      {error !== "" && (
+     <View>
+           <Text style={{color:"red"}}>USER EXIST!</Text>
+     </View>
+       )}
 
-      <TouchableOpacity style={styles.loginContainer} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.loginText}>Already have an account? <Text style={styles.loginLink}>Login!</Text></Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -59,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#87CEEB', // Sky blue background
+    backgroundColor: '#87CEEB', 
     padding: 20,
   },
   title: {

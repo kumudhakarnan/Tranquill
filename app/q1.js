@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-export default function q1() {
+export default function Q1() {
   const navigation = useNavigation();
 
   return (
@@ -10,16 +10,18 @@ export default function q1() {
       </Text>
 
       {/* Options */}
-      <Pressable style={styles.option}>
+      <Pressable style={styles.option}onPress={()=> alert('great response')}
+        
+        >
         <Text style={styles.optionText}>😄 Very Easy</Text>
       </Pressable>
-      <Pressable style={styles.option}>
+      <Pressable style={styles.option}onPress={()=> alert('great response')}>
         <Text style={styles.optionText}>🙂 Somewhat Easy</Text>
       </Pressable>
-      <Pressable style={styles.option}>
+      <Pressable style={styles.option}onPress={()=> alert('great response')}>
         <Text style={styles.optionText}>😕 Hard</Text>
       </Pressable>
-      <Pressable style={styles.option}>
+      <Pressable style={styles.option} onPress={()=> alert('great response')}>
         <Text style={styles.optionText}>😫 Very Difficult</Text>
       </Pressable>
 

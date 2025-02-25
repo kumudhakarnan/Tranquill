@@ -1,38 +1,32 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import {View,Text,TextInput,TouchableOpacity,StyleSheet,} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import {signInWithEmailAndPassword} from 'firebase/auth'
+import  auth  from '../services/firebaseauth'
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
-  });
+  const [error,setError] = useState("");
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-    navigation.navigate("pg2");
+    signInWithEmailAndPassword(auth,email,password)
+    .then((userCredential) => {
+          const user = userCredential.user; 
+          console.log(user);
+          navigation.navigate("hp");
+      })
+      .catch((error) => {
+        setError(error.message)
+      })
+   
   };
 
-  const handleFormChange = (name, value) => {
-    setCredentials((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  
 
-  const handleSignup = () => {
+  const handleSignupp = () => {
     //alert('signupp!!!');
-    navigation.navigate("Signup"); // Navigate to the signup screen
+    navigation.navigate("Signup"); 
   };
 
   return (
@@ -43,27 +37,29 @@ export default function Login() {
         style={styles.input}
         placeholder="Enter Email"
         keyboardType="email-address"
-        value={credentials.email}
+        onChangeText={setEmail}
         name={"email"}
-        onChangeText={(value) => handleFormChange("email", value)}
-        // onChangeText={(text) => setEmail(text)}
       />
-
+      
       <TextInput
         style={styles.input}
         placeholder="Enter Password"
         secureTextEntry
-        value={credentials.password}
+        onChangeText={setPassword}
         name={"password"}
-        // onChangeText={(text) => setPassword(text)}
-        onChangeText={(value) => handleFormChange("password", value)}
+      
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity style={styles.signupContainer} onPress={handleSignup}>
+       {error !== "" && (
+           <View>
+                 <Text style={{color:"red"}}>{error}</Text>
+           </View>
+        )}
+      
+      <TouchableOpacity style={styles.signupContainer} onPress={handleSignupp}>
         <Text style={styles.signupText}>
           Don't have an account? <Text style={styles.signupLink}>Sign up!</Text>
         </Text>
@@ -77,7 +73,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#87CEEB", // Sky blue background
+    backgroundColor: "#87CEEB", 
     padding: 20,
   },
   title: {

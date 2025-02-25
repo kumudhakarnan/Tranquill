@@ -1,30 +1,38 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-export default function Q3() {
+export default function Q14() {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you feel overwhelmed?
+      What do you think would help improve your mental well-being the most?
       </Text>
 
       {/* Options */}
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😄 Rarely</Text>
+      <Pressable style={styles.option}onPress={()=> alert('great response')}
+        
+        >
+        <Text style={styles.optionText}>😄 Better sleep  </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>🙂 Sometimes</Text>
+        <Text style={styles.optionText}>🙂 More social support</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😕 Often</Text>
+        <Text style={styles.optionText}>😕 Stress management techniques </Text>
+      </Pressable>
+      <Pressable style={styles.option} onPress={()=> alert('great response')}>
+        <Text style={styles.optionText}>😫 Professional help </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> alert('great response')}>
-        <Text style={styles.optionText}>😫 Almost always</Text>
+        <Text style={styles.optionText}>😕 A change in routine or environment </Text>
+      </Pressable>
+      <Pressable style={styles.option} onPress={()=> alert('great response')}>
+        <Text style={styles.optionText}>😫 Other (please specify) </Text>
       </Pressable>
 
       {/* Move Button */}
-      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q4')}>
+      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q15')}>
         <Text style={styles.moveButtonText}>move :)</Text>
       </Pressable>
     </View>
