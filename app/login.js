@@ -21,9 +21,6 @@ export default function Login() {
       })
    
   };
-
-  
-
   const handleSignupp = () => {
     //alert('signupp!!!');
     navigation.navigate("Signup"); 
