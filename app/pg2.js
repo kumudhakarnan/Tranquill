@@ -1,11 +1,16 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 export default function Pg2() {
-  const router = useRouter();
+ 
   const navigation = useNavigation();
+
+   const route = useRoute(); // ✅ Get route object
+     const { uid } = route.params || {};
+
   const handleMove = () => {
-    navigation.navigate('q1');
+    navigation.navigate('q1',{ uid});
    
   };
 

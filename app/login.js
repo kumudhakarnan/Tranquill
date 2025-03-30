@@ -1,29 +1,52 @@
 import React, { useState } from "react";
-import {View,Text,TextInput,TouchableOpacity,StyleSheet,} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import {signInWithEmailAndPassword} from 'firebase/auth'
-import  auth  from '../services/firebaseauth'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import auth from "../services/firebaseauth";
+import { supabase } from "../services/supabase"; // Import Supabase client
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth,email,password)
-    .then((userCredential) => {
-          const user = userCredential.user; 
-          console.log(user);
-          navigation.navigate("hp");
-      })
-      .catch((error) => {
-        setError(error.message)
-      })
-   
+  const handleLogin = async () => {
+    setError("");
+
+    try {
+      // 🔥 Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log("Firebase User:", user.email);
+
+      // 🔍 Fetch UID from Supabase
+      const { data, error: supabaseError } = await supabase
+        .from("users")
+        .select("uid")
+        .eq("email", email)
+        .single(); // Get the single matching record
+
+      if (supabaseError) {
+        console.error("Supabase Fetch Error:", supabaseError);
+        setError("Failed to retrieve user data. Try again.");
+        return;
+      }
+
+      console.log("Fetched UID from Supabase:", data.uid);
+
+      // ✅ Navigate to Home Page with UID
+      navigation.navigate("Homepage", { uid: data.uid });
+
+    } catch (error) {
+      console.error("Login Error:", error.message);
+      setError(error.message);
+    }
   };
+
   const handleSignupp = () => {
-    //alert('signupp!!!');
-    navigation.navigate("Signup"); 
+    navigation.navigate("Signup");
   };
 
   return (
@@ -34,28 +57,28 @@ export default function Login() {
         style={styles.input}
         placeholder="Enter Email"
         keyboardType="email-address"
+        value={email}
         onChangeText={setEmail}
-        name={"email"}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Enter Password"
         secureTextEntry
+        value={password}
         onChangeText={setPassword}
-        name={"password"}
-      
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
-       {error !== "" && (
-           <View>
-                 <Text style={{color:"red"}}>{error}</Text>
-           </View>
-        )}
-      
+
+      {error !== "" && (
+        <View>
+          <Text style={{ color: "red" }}>{error}</Text>
+        </View>
+      )}
+
       <TouchableOpacity style={styles.signupContainer} onPress={handleSignupp}>
         <Text style={styles.signupText}>
           Don't have an account? <Text style={styles.signupLink}>Sign up!</Text>
@@ -70,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#87CEEB", 
+    backgroundColor: "#87CEEB",
     padding: 20,
   },
   title: {
@@ -113,3 +136,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+

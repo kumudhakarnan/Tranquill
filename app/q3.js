@@ -1,8 +1,31 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-export default function Q3() {
-  const navigation = useNavigation();
+import { useNavigation ,useRoute} from '@react-navigation/native';
+import { supabase } from '../services/supabase';
 
+export default function Q3() {
+   const navigation = useNavigation();
+    const route = useRoute();
+    const { uid } = route.params || {};
+    const qid = 3;
+    const handleAnswer = async (answer) => {
+      try {
+        const { data, error } = await supabase
+          .from('qn')
+          .insert([{ uid, qnsno:qid, ansnum: answer }]);
+  
+        if (error) {
+          console.error('Error inserting answer:', error.message);
+        } else {
+          
+          alert('Response saved!');
+  
+          // Move to next question (q2)
+          navigation.navigate('q4', { uid });
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
@@ -10,23 +33,20 @@ export default function Q3() {
       </Text>
 
       {/* Options */}
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
         <Text style={styles.optionText}>😄 Rarely</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
         <Text style={styles.optionText}>🙂 Sometimes</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
         <Text style={styles.optionText}>😕 Often</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option}onPress={()=>handleAnswer(4)}>
         <Text style={styles.optionText}>😫 Almost always</Text>
       </Pressable>
 
-      {/* Move Button */}
-      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q4')}>
-        <Text style={styles.moveButtonText}>move :)</Text>
-      </Pressable>
+      
     </View>
   );
 }

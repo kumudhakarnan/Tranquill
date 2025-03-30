@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Image, ImageBackground ,Alert} from 'react-native';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
 import Slider from '@react-native-community/slider';
+import { useNavigation ,useRoute} from '@react-navigation/native';
 export default function Hp() {
   const [moodValue, setMoodValue] = useState(50);
   const scaleAnim = useRef(new Animated.Value(1)).current; // Emoji Bounce
   const navAnim = useRef(new Animated.Value(-100)).current; // Navbar Slide-in
   const flyAnim = useRef(new Animated.Value(0)).current; // Dragon Flying Animation
-  
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { uid } = route.params || {};
 
   // Mood Emoji Animation (Bouncing)
   useEffect(() => {
+    mood();
     Animated.sequence([
       Animated.timing(scaleAnim, {
         toValue: 1.5,
@@ -41,6 +45,13 @@ export default function Hp() {
     if (moodValue < 80) return "🙂";  // Okay Smile
     return "😃";                      // Great Smile
   };
+  const mood = () => {
+    Alert.alert("Mood Check-in", "How are you feeling today?", [
+      { text: "Happy 😊", onPress: () => setMoodValue(80) },
+      { text: "Neutral 😐", onPress: () => setMoodValue(50) },
+      { text: "Sad 😢", onPress: () => setMoodValue(20) },
+    ]);
+  };
 
   // Flying Dragon Animation
   useEffect(() => {
@@ -51,14 +62,15 @@ export default function Hp() {
       ])
     ).start();
   }, []);
-
+   
   return (
+    
     <ImageBackground source={require('../assets/bgg.jpg')} style={styles.full}>
       {/* Navbar */}
       <Animated.View style={[styles.navbar, { transform: [{ translateY: navAnim }] }]}>
         <Text style={styles.navTitle}>TRANQUIL 🤍</Text>
         <Text style={styles.navQuote}>A GOOD DAY BUILDS WITH GOOD MOOD !!</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Profile', { uid } )}>
           <MaterialIcons name="account-circle" size={35} color="white" />
         </TouchableOpacity>
       </Animated.View>
@@ -68,10 +80,8 @@ export default function Hp() {
         <Image source={require('../assets/tq.png')} style={styles.dragonImage} />
       </Animated.View>
 
-       {/* Mood Tracking Section */}
-      {/* Mood Tracking Section */}
 <View style={styles.moodContainer}>
-  <Text style={styles.moodText}>Your Mood Today!!🤔</Text>
+  <Text style={styles.moodText}>CHOOSE YOUR FACE!</Text>
   
   <View style={styles.moodRow}>
     <Slider
@@ -93,19 +103,19 @@ export default function Hp() {
 
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem}  onPress={() => navigation.navigate("Reminders")}>
           <MaterialIcons name="notifications" size={30} color="white" />
           <Text style={styles.navText}>Reminders</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Journal" ,{ uid } )}>
           <FontAwesome5 name="book" size={25} color="white" />
           <Text style={styles.navText}>Journal</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem}  onPress={() => navigation.navigate("Relaxation")}>
           <Text style={{ fontSize: 30 }}>🧘</Text> 
-          <Text style={styles.navText}>Yoga</Text>
+          <Text style={styles.navText}>Relaxation</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Tasks" ,{ uid } )}>
           <MaterialIcons name="assignment" size={30} color="white" />
           <Text style={styles.navText}>Tasks</Text>
         </TouchableOpacity>
@@ -174,7 +184,7 @@ const styles = StyleSheet.create({
   },
   
   slider: {
-    flex: 1, // Make slider take most space
+    flex: 1, // Make slider take most space,
     height: 20,
     marginRight: 10, // Space between slider & emoji
   },

@@ -22,7 +22,11 @@ import Q13 from './app/q13';
 import Q14 from './app/q14';
 import Q15 from './app/q15';
 import Hp from './app/homepg';
-
+import Tasks from './app/task';
+import Relaxation from './app/relaxation';
+import Journal from './app/journal';
+import Profile from './app/pp';
+import Reminders from './app/rem';
 
 const Stack = createStackNavigator();
 
@@ -50,7 +54,13 @@ export default function App() {
         <Stack.Screen name="q13" component={Q13}/>
         <Stack.Screen name="q14" component={Q14}/>
         <Stack.Screen name="q15" component={Q15}/>
-        <Stack.Screen name="hp" component={Hp}/>
+        <Stack.Screen name="Homepage" component={Hp}/>
+        <Stack.Screen name="Journal" component={Journal}/>
+        <Stack.Screen name ="Tasks" component={Tasks}/>
+        <Stack.Screen name ="Relaxation" component={Relaxation}/>
+        <Stack.Screen name="Profile" component={Profile}/>
+        <Stack.Screen name="Reminders" component={Reminders}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

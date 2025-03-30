@@ -10,7 +10,7 @@ export default function Welcome({ navigation }) {
     <View style={styles.container}>
       <Image source={require('../assets/tq.png')} style={styles.logo} />
       <Text style={styles.message}>
-       TRANQUIL 💜
+       TRANQUIL 🤍
       </Text>
       <View style={styles.buttonContainer}>
         <Button title="BEGIN:)" onPress={handleMove} />

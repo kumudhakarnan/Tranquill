@@ -1,7 +1,37 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import { supabase } from '../services/supabase';
+
+
+
 export default function Q1() {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { uid } = route.params || {};
+  const qid = 1;
+  console.log(uid);
+
+  // Function to insert the response into Supabase
+  const handleAnswer = async (answer) => {
+    try {
+      const { data, error } = await supabase
+        .from('qn')
+        .insert([{ uid, qnsno:qid, ansnum: answer }]);
+
+      if (error) {
+        console.error('Error inserting answer:', error.message);
+      } else {
+        
+        alert('Response saved!');
+
+        // Move to next question (q2)
+        navigation.navigate('q2', { uid });
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -10,24 +40,17 @@ export default function Q1() {
       </Text>
 
       {/* Options */}
-      <Pressable style={styles.option}onPress={()=> alert('great response')}
-        
-        >
+      <Pressable style={styles.option} onPress={() => handleAnswer(4)}>
         <Text style={styles.optionText}>😄 Very Easy</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option} onPress={() => handleAnswer(3)}>
         <Text style={styles.optionText}>🙂 Somewhat Easy</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> alert('great response')}>
+      <Pressable style={styles.option} onPress={() => handleAnswer(2)}>
         <Text style={styles.optionText}>😕 Hard</Text>
       </Pressable>
-      <Pressable style={styles.option} onPress={()=> alert('great response')}>
+      <Pressable style={styles.option} onPress={() => handleAnswer(1)}>
         <Text style={styles.optionText}>😫 Very Difficult</Text>
-      </Pressable>
-
-      {/* Move Button */}
-      <Pressable style={styles.moveButton} onPress={() => navigation.navigate('q2')}>
-        <Text style={styles.moveButtonText}>move :)</Text>
       </Pressable>
     </View>
   );
@@ -64,19 +87,5 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 18,
     color: '#333',
-  },
-  moveButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-    backgroundColor: '#1E90FF',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 20,
-  },
-  moveButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });

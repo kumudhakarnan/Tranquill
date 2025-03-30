@@ -1,27 +1,66 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import {createUserWithEmailAndPassword} from 'firebase/auth'
-import auth from '../services/firebaseauth'
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import auth from '../services/firebaseauth';
+import { supabase } from '../services/supabase'; // Import Supabase client
+
 export default function Signup() {
   const [name, setName] = useState('');
+  const [phnno, setPhnno] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error,setError] = useState('');
+  const [error, setError] = useState('');
   const navigation = useNavigation();
 
-  const handleSignup = () => {
-    
-   
-    createUserWithEmailAndPassword(auth,email,password)
-    .then((userCredential) => {
-          const user = userCredential.user; 
-          navigation.navigate("pg1");
-      })
-      .catch((error) => {
-        setError(error.message)
-      })
-    
+  const handleSignup = async () => {
+    setError("");
+
+    try {
+      // 1️⃣ Firebase Authentication (Sign Up)
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user; // Get Firebase user
+
+      // 2️⃣ Insert User Data into Supabase
+      const { data, error: supabaseError } = await supabase
+        .from('users')
+        .insert([
+          {
+            name: name,
+            email: email,
+            phno: phnno,
+            password: password, // Storing phone number
+          }
+        ])
+        .select("uid"); // Get auto-generated UID
+
+      if (supabaseError) {
+        console.error("Supabase Insert Error:", supabaseError);
+        setError("Failed to save user data. Please try again.");
+        return;
+      }
+
+      // 4️⃣ Fetch the same UID from Supabase to confirm it exists
+      const { data: userData, error: fetchError } = await supabase
+        .from("users")
+        .select("uid,name")
+        .eq("email", email) // Find user by email
+        .single(); // Get single result
+
+      if (fetchError) {
+        console.error("Supabase Fetch Error:", fetchError);
+        return;
+      }
+
+     // console.log("🔥 Fetched UID from Supabase:", userData.uid,userData.name); // Console log the fetched UID
+
+      // 5️⃣ Navigate after successful signup
+      navigation.navigate("pg1", { uid: userData.uid });
+
+    } catch (error) {
+      console.error("Firebase Signup Error:", error.message);
+      setError(error.message);
+    }
   };
 
   return (
@@ -33,6 +72,14 @@ export default function Signup() {
         placeholder="Enter Name"
         value={name}
         onChangeText={setName}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Phone Number"
+        keyboardType="phone-pad"
+        value={phnno}
+        onChangeText={setPhnno}
       />
 
       <TextInput
@@ -54,12 +101,12 @@ export default function Signup() {
       <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
-      {error !== "" && (
-     <View>
-           <Text style={{color:"red"}}>USER EXIST!</Text>
-     </View>
-       )}
 
+      {error !== "" && (
+        <View>
+          <Text style={{ color: "red" }}>{error}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -69,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#87CEEB', 
+    backgroundColor: '#87CEEB',
     padding: 20,
   },
   title: {
@@ -98,17 +145,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
-  },
-  loginContainer: {
-    marginTop: 20,
-  },
-  loginText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  loginLink: {
-    color: '#007BFF',
     fontWeight: 'bold',
   },
 });
