@@ -10,14 +10,14 @@ export default function Q10() {
      const handleAnswer = async (answer) => {
       try {
         const { data, error } = await supabase
-          .from('qn')
+          .from('qnn')
           .insert([{ uid, qnsno:qid, ansnum: answer }]);
   
         if (error) {
           console.error('Error inserting answer:', error.message);
         } else {
           
-          alert('Response saved!');
+         
   
           // Move to next question (q2)
           navigation.navigate('q11', { uid });
@@ -30,21 +30,24 @@ export default function Q10() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you engage in social activities or spend time with loved ones?
+      Have you had enough water today?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Almost every day </Text>
+        <Text style={styles.optionText}>😄 Yes, I stayed well-hydrated </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 A few times a week </Text>
+        <Text style={styles.optionText}>🙂I drank some, but not enough
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Rarely </Text>
+        <Text style={styles.optionText}>😕I barely drank water today
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Never </Text>
+        <Text style={styles.optionText}> 😐I mostly had other drinks (coffee, soda, etc.)
+        </Text>
       </Pressable>
     </View>
   );

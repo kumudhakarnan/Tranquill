@@ -10,14 +10,14 @@ export default function Q8() {
      const handleAnswer = async (answer) => {
       try {
         const { data, error } = await supabase
-          .from('qn')
+          .from('qnn')
           .insert([{ uid, qnsno:qid, ansnum: answer }]);
   
         if (error) {
           console.error('Error inserting answer:', error.message);
         } else {
           
-          alert('Response saved!');
+          
           navigation.navigate('q9', { uid });
         }
       } catch (err) {
@@ -28,23 +28,25 @@ export default function Q8() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you feel anxious or on edge?
+      How much physical activity have you done today?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=>handleAnswer(4)}
         
         >
-        <Text style={styles.optionText}>😄 Rarely </Text>
+        <Text style={styles.optionText}>Light activity (walking, stretching)</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Sometimes </Text>
+        <Text style={styles.optionText}> Moderate exercise (yoga, jogging)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Often  </Text>
+        <Text style={styles.optionText}> Intense workout  </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=>handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Almost always </Text>
+        <Text style={styles.optionText}>None at all
+        </Text>
       </Pressable>
 
      

@@ -12,6 +12,7 @@ export default function Journal() {
   const { uid } = route.params || {};
 
   useEffect(() => {
+    console.log(uid);
     const fetchEntries = async () => {
       if (!uid) {
         alert("User not found!");

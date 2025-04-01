@@ -10,14 +10,14 @@ export default function Q6() {
      const handleAnswer = async (answer) => {
       try {
         const { data, error } = await supabase
-          .from('qn')
+          .from('qnn')
           .insert([{ uid, qnsno:qid, ansnum: answer }]);
   
         if (error) {
           console.error('Error inserting answer:', error.message);
         } else {
           
-          alert('Response saved!');
+         
   
           // Move to next question (q2)
           navigation.navigate('q7', { uid });
@@ -30,24 +30,25 @@ export default function Q6() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      What's your biggest obstacle right now?
+      If your mood were a weather forecast, what would it be?
             </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>Stress</Text>
+        <Text style={styles.optionText}>Sunny ☀ (Positive, Energized)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>Anxiety </Text>
+        <Text style={styles.optionText}> Cloudy 🌥 (Neutral, Uncertain)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(2)}>
-        <Text style={styles.optionText}>Lack of motivation </Text>
+        <Text style={styles.optionText}>Rainy 🌧 (Sad, Low Energy)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>Loneliness</Text>
-      </Pressable>
-      <Pressable style={styles.option}onPress={()=> handleAnswer(0)}>
-        <Text style={styles.optionText}>Other (please specify) </Text>
+        <Text style={styles.optionText}> Stormy ⛈ (Angry, Overwhelmed)
+        </Text>
       </Pressable>
 
     </View>

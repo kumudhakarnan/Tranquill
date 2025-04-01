@@ -10,14 +10,14 @@ export default function Q9() {
      const handleAnswer = async (answer) => {
       try {
         const { data, error } = await supabase
-          .from('qn')
+          .from('qnn')
           .insert([{ uid, qnsno:qid, ansnum: answer }]);
   
         if (error) {
           console.error('Error inserting answer:', error.message);
         } else {
           
-          alert('Response saved!');
+         
   
           // Move to next question (q2)
           navigation.navigate('q10', { uid });
@@ -29,23 +29,25 @@ export default function Q9() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      Do you have someone you feel comfortable talking to about your feelings?
+      How well have you been eating today?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=>handleAnswer(4)}
         
         >
-        <Text style={styles.optionText}>😄 Yes, always </Text>
+        <Text style={styles.optionText}>😄 Very healthy, balanced meals </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Sometimes </Text>
+        <Text style={styles.optionText}>😃  Mostly healthy, with some snacks</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Rarely </Text>
+        <Text style={styles.optionText}>🙂 Not great, but I’ve had some nutritious food
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=>handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 No, never </Text>
+        <Text style={styles.optionText}>😕 Poor, mostly unhealthy or skipped meals
+        </Text>
       </Pressable>
 
       

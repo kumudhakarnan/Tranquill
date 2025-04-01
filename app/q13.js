@@ -10,17 +10,17 @@ export default function Q13() {
        const handleAnswer = async (answer) => {
         try {
           const { data, error } = await supabase
-            .from('qn')
+            .from('qnn')
             .insert([{ uid, qnsno:qid, ansnum: answer }]);
     
           if (error) {
             console.error('Error inserting answer:', error.message);
           } else {
             
-            alert('Response saved!');
+           
     
             // Move to next question (q2)
-            navigation.navigate('q14', { uid });
+            navigation.navigate('Homepage', { uid });
           }
         } catch (err) {
           console.error('Unexpected error:', err);
@@ -31,22 +31,24 @@ export default function Q13() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How motivated do you feel to accomplish daily tasks?
+      Are you currently working on any personal projects or goals?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}
         >
-        <Text style={styles.optionText}>😄 Very motivated </Text>
+        <Text style={styles.optionText}>Yes, and I’m making good progress </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat motivated </Text>
+        <Text style={styles.optionText}>Yes, but I’m struggling to stay consistent
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Struggling but trying </Text>
+        <Text style={styles.optionText}>I want to start something but haven’t yet
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 No motivation at all </Text>
+        <Text style={styles.optionText}> No, I don’t have any personal projects right now</Text>
       </Pressable>
     </View>
   );

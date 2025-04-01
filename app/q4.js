@@ -10,15 +10,14 @@ export default function Q4() {
    const handleAnswer = async (answer) => {
     try {
       const { data, error } = await supabase
-        .from('qn')
+        .from('qnn')
         .insert([{ uid, qnsno:qid, ansnum: answer }]);
 
       if (error) {
         console.error('Error inserting answer:', error.message);
       } else {
         
-        alert('Response saved!');
-
+        
         // Move to next question (q2)
         navigation.navigate('q5', { uid });
       }
@@ -29,21 +28,23 @@ export default function Q4() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How connected do you feel to people around you?
+      Are you holding onto any emotions you’d like to let go of?
             </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>😄Very connected</Text>
+        <Text style={styles.optionText}>No, I feel balanced
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat connected</Text>
+        <Text style={styles.optionText}>Yes, but I’m working through them</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Not very connected</Text>
+        <Text style={styles.optionText}>Yes, and they are overwhelming</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Completely Disconnected</Text>
+        <Text style={styles.optionText}> I’m not sure
+        </Text>
       </Pressable>
 
     </View>

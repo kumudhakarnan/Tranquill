@@ -10,14 +10,14 @@ export default function Q3() {
     const handleAnswer = async (answer) => {
       try {
         const { data, error } = await supabase
-          .from('qn')
+          .from('qnn')
           .insert([{ uid, qnsno:qid, ansnum: answer }]);
   
         if (error) {
           console.error('Error inserting answer:', error.message);
         } else {
           
-          alert('Response saved!');
+         
   
           // Move to next question (q2)
           navigation.navigate('q4', { uid });
@@ -29,21 +29,25 @@ export default function Q3() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you feel overwhelmed?
+      If your emotions had a color, what would they be?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Rarely</Text>
+        <Text style={styles.optionText}>Red (Angry, Passionate)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>🙂 Sometimes</Text>
+        <Text style={styles.optionText}>Yellow (Happy, Energized)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>😕 Often</Text>
+        <Text style={styles.optionText}>Gray (Numb, Neutral)
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(4)}>
-        <Text style={styles.optionText}>😫 Almost always</Text>
+        <Text style={styles.optionText}> Blue (Calm, Sad)
+        </Text>
       </Pressable>
 
       

@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Image, ImageBackgro
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'; 
 import Slider from '@react-native-community/slider';
 import { useNavigation ,useRoute} from '@react-navigation/native';
+import { Platform } from 'react-native';
+
 export default function Hp() {
-  const [moodValue, setMoodValue] = useState(50);
+  const [moodValue, setMoodValue] = useState(null); // Initially null
   const scaleAnim = useRef(new Animated.Value(1)).current; // Emoji Bounce
   const navAnim = useRef(new Animated.Value(-100)).current; // Navbar Slide-in
   const flyAnim = useRef(new Animated.Value(0)).current; // Dragon Flying Animation
@@ -14,19 +16,21 @@ export default function Hp() {
 
   // Mood Emoji Animation (Bouncing)
   useEffect(() => {
-    mood();
-    Animated.sequence([
-      Animated.timing(scaleAnim, {
-        toValue: 1.5,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    
+    if (moodValue !== null) {
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.5,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
   }, [moodValue]);
 
   // Navbar Slide-in Animation (on Mount)
@@ -39,18 +43,20 @@ export default function Hp() {
   }, []);
 
   // Function to get mood emoji based on range
-  const getMoodEmoji = () => {
-    if (moodValue < 30) return "😢";  // Very Sad
-    if (moodValue < 60) return "😐";  // Neutral
-    if (moodValue < 80) return "🙂";  // Okay Smile
-    return "😃";                      // Great Smile
+  const getMoodMessage = (value) => {
+    if (value < 30) return "😢 It's okay to have bad days. Be kind to yourself and take it one step at a time. 💙";
+    if (value < 60) return "😐 You’re doing fine! A little self-care can turn your day around. 🌿✨";
+    if (value < 80) return "🙂 Every small joy counts! Keep finding reasons to smile. 🌞😊";
+    return "😃 Your energy is contagious! Spread the positivity today. 🌟💖";
   };
-  const mood = () => {
-    Alert.alert("Mood Check-in", "How are you feeling today?", [
-      { text: "Happy 😊", onPress: () => setMoodValue(80) },
-      { text: "Neutral 😐", onPress: () => setMoodValue(50) },
-      { text: "Sad 😢", onPress: () => setMoodValue(20) },
-    ]);
+   
+
+  const getMoodEmoji = () => {
+    if (moodValue === null) return "👀"; // Default Eyes emoji when no selection
+    if (moodValue < 30) return "😢"; // Very Sad
+    if (moodValue < 60) return "😐"; // Neutral
+    if (moodValue < 80) return "🙂"; // Okay Smile
+    return "😃"; // Great Smile
   };
 
   // Flying Dragon Animation
@@ -62,15 +68,14 @@ export default function Hp() {
       ])
     ).start();
   }, []);
-   
+
   return (
-    
     <ImageBackground source={require('../assets/bgg.jpg')} style={styles.full}>
       {/* Navbar */}
       <Animated.View style={[styles.navbar, { transform: [{ translateY: navAnim }] }]}>
         <Text style={styles.navTitle}>TRANQUIL 🤍</Text>
         <Text style={styles.navQuote}>A GOOD DAY BUILDS WITH GOOD MOOD !!</Text>
-        <TouchableOpacity onPress={()=>navigation.navigate('Profile', { uid } )}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile', { uid } )}>
           <MaterialIcons name="account-circle" size={35} color="white" />
         </TouchableOpacity>
       </Animated.View>
@@ -80,42 +85,55 @@ export default function Hp() {
         <Image source={require('../assets/tq.png')} style={styles.dragonImage} />
       </Animated.View>
 
-<View style={styles.moodContainer}>
-  <Text style={styles.moodText}>CHOOSE YOUR FACE!</Text>
+      <View style={styles.moodContainer}>
+        <Text style={styles.moodText}>CHOOSE YOUR FACE!</Text>
+        
+        <View style={styles.moodRow}>
+        <Slider
+  style={styles.slider}
+  minimumValue={0}
+  maximumValue={100}
+  step={1}
+  value={moodValue ?? 50} // Default position
+  onValueChange={(value) => {
+    setMoodValue(value); // Just update the state without alert
+  }}
+  onSlidingComplete={(value) => {
+    if (value !== null) {
+      const moodMsg = getMoodMessage(value);
+      if (Platform.OS !== 'web') {
+        Alert.alert("CHEERUP-CHAMP!", moodMsg);
+      } else {
+        console.warn("Mood Check-in:", moodMsg);
+      }
+    }
+  }}
   
-  <View style={styles.moodRow}>
-    <Slider
-      style={styles.slider}
-      minimumValue={0}
-      maximumValue={100}
-      step={1}
-      value={moodValue}
-      onValueChange={setMoodValue}
-      minimumTrackTintColor="#87CEEB" // Sky Blue
-      maximumTrackTintColor="#ADD8E6"
-      thumbTintColor="#1E90FF"
-    />
-    <Animated.Text style={[styles.moodEmoji, { transform: [{ scale: scaleAnim }] }]}>
-      {getMoodEmoji()}
-    </Animated.Text>
-  </View>
-</View>
+  minimumTrackTintColor="#87CEEB"
+  maximumTrackTintColor="#ADD8E6"
+  thumbTintColor="#1E90FF"
+/>
+          <Animated.Text style={[styles.moodEmoji, { transform: [{ scale: scaleAnim }] }]}>
+            {getMoodEmoji()}
+          </Animated.Text>
+        </View>
+      </View>
 
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}  onPress={() => navigation.navigate("Reminders")}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Reminders")}>
           <MaterialIcons name="notifications" size={30} color="white" />
           <Text style={styles.navText}>Reminders</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Journal" ,{ uid } )}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Journal", { uid } )}>
           <FontAwesome5 name="book" size={25} color="white" />
           <Text style={styles.navText}>Journal</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}  onPress={() => navigation.navigate("Relaxation")}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Relaxation")}>
           <Text style={{ fontSize: 30 }}>🧘</Text> 
           <Text style={styles.navText}>Relaxation</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Tasks" ,{ uid } )}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Tasks", { uid } )}>
           <MaterialIcons name="assignment" size={30} color="white" />
           <Text style={styles.navText}>Tasks</Text>
         </TouchableOpacity>
@@ -123,6 +141,8 @@ export default function Hp() {
     </ImageBackground>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   full: {
@@ -145,12 +165,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   navTitle: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     color: 'white',
   },
   navQuote: {
-    fontSize: 14,
+    fontSize: 10,
     color: 'white',
     fontStyle: 'italic',
     textAlign: 'center',
@@ -219,5 +239,4 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: 4,
   },
-});
-
+}); 

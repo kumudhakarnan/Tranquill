@@ -10,14 +10,14 @@ export default function Q2() {
    const handleAnswer = async (answer) => {
     try {
       const { data, error } = await supabase
-        .from('qn')
+        .from('qnn')
         .insert([{ uid, qnsno:qid, ansnum: answer }]);
 
       if (error) {
         console.error('Error inserting answer:', error.message);
       } else {
         
-        alert('Response saved!');
+        
 
         // Move to next question (q2)
         navigation.navigate('q3', { uid });
@@ -29,21 +29,24 @@ export default function Q2() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-        How active are you during the day?
+      What is one thing you can do to improve your sleep tonight?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option} onPress={() => handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Very Active</Text>
+        <Text style={styles.optionText}>Reduce screen time before bed
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat Active</Text>
+        <Text style={styles.optionText}>Try a relaxation exercise
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Not Very Active</Text>
+        <Text style={styles.optionText}>Adjust my sleep schedule
+          </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Barely Active</Text>
+        <Text style={styles.optionText}>Nothing, my sleep is fine</Text>
       </Pressable>
     
     </View>

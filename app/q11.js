@@ -10,14 +10,14 @@ export default function Q11() {
        const handleAnswer = async (answer) => {
         try {
           const { data, error } = await supabase
-            .from('qn')
+            .from('qnn')
             .insert([{ uid, qnsno:qid, ansnum: answer }]);
     
           if (error) {
             console.error('Error inserting answer:', error.message);
           } else {
             
-            alert('Response saved!');
+           
     
             // Move to next question (q2)
             navigation.navigate('q12', { uid });
@@ -30,20 +30,20 @@ export default function Q11() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.question}>
-      How well are you sleeping at night?
+      <Text style={styles.question}>What activity helps you relax the most?
       </Text>
       <Pressable style={styles.option}onPress={()=>handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Very well </Text>
+        <Text style={styles.optionText}>Listening to music or podcasts 🎧 </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat well</Text>
+        <Text style={styles.optionText}>Watching movies or shows 🎬
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Poorly </Text>
+        <Text style={styles.optionText}> Reading or writing 📖✍</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Hardly at all </Text>
+        <Text style={styles.optionText}> Spending time in nature 🌿 </Text>
       </Pressable>
     </View>
   );

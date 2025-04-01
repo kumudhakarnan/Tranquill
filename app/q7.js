@@ -10,14 +10,14 @@ export default function Q7() {
     const handleAnswer = async (answer) => {
      try {
        const { data, error } = await supabase
-         .from('qn')
+         .from('qnn')
          .insert([{ uid, qnsno:qid, ansnum: answer }]);
  
        if (error) {
          console.error('Error inserting answer:', error.message);
        } else {
          
-         alert('Response saved!');
+         
  
          // Move to next question (q2)
          navigation.navigate('q8', { uid });
@@ -29,23 +29,26 @@ export default function Q7() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How frequently do you experience feelings of sadness or emptiness?
+      What’s one thing that could improve your mood right now?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}
         
         >
-        <Text style={styles.optionText}>😄 Almost never </Text>
+        <Text style={styles.optionText}>Talking to someone
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Occaionally</Text>
+        <Text style={styles.optionText}>Taking a break
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Frequently </Text>
+        <Text style={styles.optionText}> Doing something I enjoy</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=> handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Almost all the time </Text>
+        <Text style={styles.optionText}> Nothing, my mood is fine
+        </Text>
       </Pressable>
     </View>
   );

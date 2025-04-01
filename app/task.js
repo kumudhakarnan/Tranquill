@@ -12,23 +12,92 @@ export default function Tasks() {
   const { uid } = route.params || {};
 
   useEffect(() => {
+    console.log(uid);
     const fetchTasks = async () => {
+
       if (!uid) {
         alert("User is not found!");
-      } else {
-        const { data, error } = await supabase
-          .from('tasks')
-          .select('tid,title,status')
-          .eq('uid', uid);
-        
-        if (error) 
-          console.error('Error fetching tasks:', error);
-        else 
-          setTasks(data);
+        return;
       }
+  
+      // Fetch answers from 'qnn' table
+      const { data: answers, error: ansError } = await supabase
+        .from('qnn')
+        .select('qnsno, ansnum')
+        .eq('uid', uid);
+  
+      if (ansError || !answers) {
+        console.error('Error fetching answers:', ansError);
+        return;
+      }
+  
+      console.log("Fetched answers:", answers);
+  
+      if (answers.length === 0) return;
+  
+      // 🔥 Split into smaller batches to avoid 400 error
+      const chunkSize = 5; // Adjust this if needed
+      let suggestedTasks = [];
+  
+      for (let i = 0; i < answers.length; i += chunkSize) {
+        const chunk = answers.slice(i, i + chunkSize);
+      
+        // Fixing the OR condition syntax
+        const orCondition = chunk
+          .map(a => `and(qnno.eq.${a.qnsno},opnum.eq.${a.ansnum})`)
+          .join(',');
+      
+        const { data: taskChunk, error: taskError } = await supabase
+          .from('taskstt')
+          .select('tid, task')
+          .or(orCondition);
+      
+        if (taskError) {
+          console.error('Error fetching suggested tasks:', taskError);
+          return;
+        }
+      
+        suggestedTasks = [...suggestedTasks, ...taskChunk];
+      }
+      console.log("Fetched suggested tasks:", suggestedTasks);
+  
+      // Fetch existing tasks
+      const { data: existingTasks, error: fetchError } = await supabase
+        .from('tasks')
+        .select('tid, title, status')
+        .eq('uid', uid);
+  
+      if (fetchError || !existingTasks) {
+        console.error('Error fetching tasks:', fetchError);
+        return;
+      }
+  
+      console.log("Existing tasks:", existingTasks);
+  
+      // Filter out already existing tasks
+      const newTasks = suggestedTasks.filter(sTask =>
+        !existingTasks.some(eTask => eTask.tid === sTask.tid)
+      ).map(task => ({ tid: task.tid, uid, title: task.task, status: 'pending' }));
+  
+      console.log("New tasks to insert:", newTasks);
+  
+      // Insert new tasks only if they don't exist
+      if (newTasks.length > 0) {
+        const { error: insertError } = await supabase.from('tasks').insert(newTasks);
+        if (insertError) {
+          console.error("Error inserting tasks:", insertError);
+          return;
+        }
+      }
+  
+      // Update state
+      setTasks([...existingTasks, ...newTasks]);
     };
+  
     fetchTasks();
   }, [uid]);
+  
+  
  
   const addTask = async () => {
     if (newTask.trim() === '' || !uid) return;
@@ -63,7 +132,6 @@ export default function Tasks() {
     
     if (error) console.error('Error deleting task:', error);
     else setTasks(tasks.filter(task => task.tid !== tid));
-    console.log(tasks);
   };
 
   return (

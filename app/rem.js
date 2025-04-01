@@ -31,7 +31,7 @@ export default function Reminders() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Positive Quote</Text>
+      <Text style={styles.title}>GOOD THOUGHT🍃</Text>
 
       {loading ? (
         <ActivityIndicator size="large" color="#007BFF" />
@@ -43,12 +43,12 @@ export default function Reminders() {
       )}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={fetchQuote}>
-          <Text style={styles.buttonText}>Next Quote</Text>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Homepage')} >
+          <Text style={styles.buttonText}>BACK</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Homepage')}>
-          <Text style={styles.buttonText}>Back</Text>
+        <TouchableOpacity style={styles.button} onPress={fetchQuote}>
+          <Text style={styles.buttonText}>MORE 👉🏻👈🏻</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -10,14 +10,14 @@ export default function Q5() {
     const handleAnswer = async (answer) => {
      try {
        const { data, error } = await supabase
-         .from('qn')
+         .from('qnn')
          .insert([{ uid, qnsno:qid, ansnum: answer }]);
  
        if (error) {
          console.error('Error inserting answer:', error.message);
        } else {
          
-         alert('Response saved!');
+         
  
          // Move to next question (q2)
          navigation.navigate('q6', { uid });
@@ -30,21 +30,21 @@ export default function Q5() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How happy are you with your current daily routine?
+      How would you describe your mood in one word?
             </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>😄Very happy</Text>
+        <Text style={styles.optionText}>Happy</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat happy</Text>
+        <Text style={styles.optionText}>Neutral</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Neutral</Text>
+        <Text style={styles.optionText}>Anxious</Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Unhappy </Text>
+        <Text style={styles.optionText}>Sad </Text>
       </Pressable>
 
     </View>

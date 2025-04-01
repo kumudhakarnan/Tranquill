@@ -16,14 +16,14 @@ export default function Q1() {
   const handleAnswer = async (answer) => {
     try {
       const { data, error } = await supabase
-        .from('qn')
+        .from('qnn')
         .insert([{ uid, qnsno:qid, ansnum: answer }]);
 
       if (error) {
         console.error('Error inserting answer:', error.message);
       } else {
         
-        alert('Response saved!');
+       
 
         // Move to next question (q2)
         navigation.navigate('q2', { uid });
@@ -36,21 +36,21 @@ export default function Q1() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-        How easy is it for you to get out of bed in the morning?
+      How would you rate the quality of your sleep?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option} onPress={() => handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Very Easy</Text>
+        <Text style={styles.optionText}>😄Excellent</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 Somewhat Easy</Text>
+        <Text style={styles.optionText}>🙂 Good</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Hard</Text>
+        <Text style={styles.optionText}>😕 Average</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Very Difficult</Text>
+        <Text style={styles.optionText}>😫 Poor</Text>
       </Pressable>
     </View>
   );

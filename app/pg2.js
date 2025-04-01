@@ -17,7 +17,7 @@ export default function Pg2() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        THE FOLLOWING 15 QNS IS PROVIDED FOR YOU TO GIVE THE HEARTFELT ANSWER !!!🤗
+        THE FOLLOWING  QNS IS PROVIDED FOR YOU TO GIVE THE HEARTFELT ANSWER !!!🤗
       </Text>
       <View style={styles.buttonContainer}>
         <Button title="move :)" onPress={handleMove} />

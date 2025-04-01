@@ -56,8 +56,23 @@ export default function Profile() {
     }
   };
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Logout Error:', error);
+      Alert.alert('Error', 'Failed to log out.');
+    } else {
+      navigation.navigate('Login'); 
+    }
+  };
+
   return (
     <View style={styles.container}>
+      {/* Logout Button at Top Right */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Your Profile</Text>
 
       <View style={styles.inputContainer}>
@@ -112,6 +127,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     backgroundColor: '#87CEEB',
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    backgroundColor: '#FF3B30',
+    padding: 10,
+    borderRadius: 10,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   title: {
     fontSize: 25,

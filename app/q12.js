@@ -10,14 +10,14 @@ export default function Q12() {
        const handleAnswer = async (answer) => {
         try {
           const { data, error } = await supabase
-            .from('qn')
+            .from('qnn')
             .insert([{ uid, qnsno:qid, ansnum: answer }]);
     
           if (error) {
             console.error('Error inserting answer:', error.message);
           } else {
             
-            alert('Response saved!');
+           
     
             // Move to next question (q2)
             navigation.navigate('q13', { uid });
@@ -30,21 +30,24 @@ export default function Q12() {
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      How often do you take time for self-care activities (e.g., exercise, hobbies, relaxation)?
+      What kind of hobbies or activities make you feel the happiest?
       </Text>
 
       {/* Options */}
       <Pressable style={styles.option}onPress={()=>handleAnswer(4)}>
-        <Text style={styles.optionText}>😄 Every day </Text>
+        <Text style={styles.optionText}>Creative (art, music, writing) 🎨🎶 </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=>handleAnswer(3)}>
-        <Text style={styles.optionText}>🙂 A few times a week </Text>
+        <Text style={styles.optionText}>Physical (sports, dance, working out) 🏃‍♀⚽
+        </Text>
       </Pressable>
       <Pressable style={styles.option}onPress={()=> handleAnswer(2)}>
-        <Text style={styles.optionText}>😕 Rarely </Text>
+        <Text style={styles.optionText}>Intellectual (reading, puzzles, learning) 📚🧠
+        </Text>
       </Pressable>
       <Pressable style={styles.option} onPress={()=>handleAnswer(1)}>
-        <Text style={styles.optionText}>😫 Never </Text>
+        <Text style={styles.optionText}>Social (hanging out, gaming, events) 👫🎮
+        </Text>
       </Pressable>
 
       
