@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import auth from "../services/firebaseauth";
 import { supabase } from "../services/supabase"; // Import Supabase client
 
@@ -9,10 +9,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showReset, setShowReset] = useState(false); // Track if reset button should show
   const navigation = useNavigation();
 
   const handleLogin = async () => {
+    if (!email) {
+      setError("Please enter your email address");
+      return;
+    }
+    
     setError("");
+    setShowReset(false); // Reset reset button on new login attempt
 
     try {
       // 🔥 Firebase Authentication
@@ -40,12 +47,36 @@ export default function Login() {
       navigation.navigate("Homepage", { uid: data.uid });
 
     } catch (error) {
-      console.error("Login Error:", error.message);
+      console.error("Login Error:", error.message, error.code);
       setError(error.message);
+
+      // Show reset password button for authentication errors
+      // Firebase v9 uses "auth/invalid-credential" for wrong password/email combinations
+      if (error.code === "auth/invalid-credential" || 
+          error.code === "auth/wrong-password" || 
+          error.code === "auth/user-not-found") {
+        setShowReset(true);
+        setError("Invalid email or password. Try again or reset your password.");
+      }
     }
   };
 
-  const handleSignupp = () => {
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError("Please enter your email address to reset password");
+      return;
+    }
+    
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset link sent to your email!");
+    } catch (error) {
+      console.error("Reset Error:", error.message);
+      setError("Failed to send reset email. Please check if the email is correct.");
+    }
+  };
+
+  const handleSignup = () => {
     navigation.navigate("Signup");
   };
 
@@ -59,6 +90,7 @@ export default function Login() {
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        autoCapitalize="none"
       />
 
       <TextInput
@@ -74,12 +106,18 @@ export default function Login() {
       </TouchableOpacity>
 
       {error !== "" && (
-        <View>
-          <Text style={{ color: "red" }}>{error}</Text>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
         </View>
       )}
 
-      <TouchableOpacity style={styles.signupContainer} onPress={handleSignupp}>
+      {showReset && (
+        <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
+          <Text style={styles.resetText}>Forgot Password? Reset</Text>
+        </TouchableOpacity>
+      )}
+
+      <TouchableOpacity style={styles.signupContainer} onPress={handleSignup}>
         <Text style={styles.signupText}>
           Don't have an account? <Text style={styles.signupLink}>Sign up!</Text>
         </Text>
@@ -122,6 +160,23 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  errorContainer: {
+    marginTop: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+  },
+  resetButton: {
+    marginTop: 10,
+    padding: 5,
+  },
+  resetText: {
+    color: "#FF0000",
     fontWeight: "bold",
   },
   signupContainer: {

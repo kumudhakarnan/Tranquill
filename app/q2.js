@@ -1,54 +1,49 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useNavigation , useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../services/supabase';
+
 export default function Q2() {
   const navigation = useNavigation();
-   const route = useRoute();
-   const { uid } = route.params || {};
-   const qid = 2;
+  const route = useRoute();
+  const { uid } = route.params || {};
+  const qid = 2;
 
-   const handleAnswer = async (answer) => {
+  const handleAnswer = async (answer) => {
     try {
       const { data, error } = await supabase
         .from('qnn')
-        .insert([{ uid, qnsno:qid, ansnum: answer }]);
+        .insert([{ uid, qnsno: qid, ansnum: answer }]);
 
       if (error) {
         console.error('Error inserting answer:', error.message);
       } else {
-        
-        
-
-        // Move to next question (q2)
+        // Move to next question (q3)
         navigation.navigate('q3', { uid });
       }
     } catch (err) {
       console.error('Unexpected error:', err);
     }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      What is one thing you can do to improve your sleep tonight?
+        What is one thing you can do to improve your sleep tonight? 😴💤
       </Text>
 
-      {/* Options */}
+      {/* Options with Emojis */}
       <Pressable style={styles.option} onPress={() => handleAnswer(4)}>
-        <Text style={styles.optionText}>Reduce screen time before bed
-        </Text>
+        <Text style={styles.optionText}>📱❌ Reduce screen time before bed</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(3)}>
-        <Text style={styles.optionText}>Try a relaxation exercise
-        </Text>
+        <Text style={styles.optionText}>🧘‍♂️ Try a relaxation exercise</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(2)}>
-        <Text style={styles.optionText}>Adjust my sleep schedule
-          </Text>
+        <Text style={styles.optionText}>⏰ Adjust my sleep schedule</Text>
       </Pressable>
       <Pressable style={styles.option} onPress={() => handleAnswer(1)}>
-        <Text style={styles.optionText}>Nothing, my sleep is fine</Text>
+        <Text style={styles.optionText}>😌 Nothing, my sleep is fine</Text>
       </Pressable>
-    
     </View>
   );
 }
@@ -84,19 +79,5 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 18,
     color: '#333',
-  },
-  moveButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-    backgroundColor: '#1E90FF',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 20,
-  },
-  moveButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });

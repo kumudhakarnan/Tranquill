@@ -1,56 +1,49 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useNavigation ,useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { supabase } from '../services/supabase';
 
 export default function Q3() {
-   const navigation = useNavigation();
-    const route = useRoute();
-    const { uid } = route.params || {};
-    const qid = 3;
-    const handleAnswer = async (answer) => {
-      try {
-        const { data, error } = await supabase
-          .from('qnn')
-          .insert([{ uid, qnsno:qid, ansnum: answer }]);
-  
-        if (error) {
-          console.error('Error inserting answer:', error.message);
-        } else {
-          
-         
-  
-          // Move to next question (q2)
-          navigation.navigate('q4', { uid });
-        }
-      } catch (err) {
-        console.error('Unexpected error:', err);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { uid } = route.params || {};
+  const qid = 3;
+
+  const handleAnswer = async (answer) => {
+    try {
+      const { data, error } = await supabase
+        .from('qnn')
+        .insert([{ uid, qnsno: qid, ansnum: answer }]);
+
+      if (error) {
+        console.error('Error inserting answer:', error.message);
+      } else {
+        // Move to next question (q4)
+        navigation.navigate('q4', { uid });
       }
-    };
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.question}>
-      If your emotions had a color, what would they be?
+        If your emotions had a color, what would they be? 🎨🌈
       </Text>
 
-      {/* Options */}
-      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>Red (Angry, Passionate)
-        </Text>
+      {/* Options with Emojis */}
+      <Pressable style={styles.option} onPress={() => handleAnswer(4)}>
+        <Text style={styles.optionText}>🔴 Red (Angry, Passionate)</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>Yellow (Happy, Energized)
-        </Text>
+      <Pressable style={styles.option} onPress={() => handleAnswer(3)}>
+        <Text style={styles.optionText}>💛 Yellow (Happy, Energized)</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=> handleAnswer(4)}>
-        <Text style={styles.optionText}>Gray (Numb, Neutral)
-        </Text>
+      <Pressable style={styles.option} onPress={() => handleAnswer(2)}>
+        <Text style={styles.optionText}>⚪ Gray (Numb, Neutral)</Text>
       </Pressable>
-      <Pressable style={styles.option}onPress={()=>handleAnswer(4)}>
-        <Text style={styles.optionText}> Blue (Calm, Sad)
-        </Text>
+      <Pressable style={styles.option} onPress={() => handleAnswer(1)}>
+        <Text style={styles.optionText}>🔵 Blue (Calm, Sad)</Text>
       </Pressable>
-
-      
     </View>
   );
 }
@@ -86,19 +79,5 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 18,
     color: '#333',
-  },
-  moveButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-    backgroundColor: '#1E90FF',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 20,
-  },
-  moveButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
