@@ -27,7 +27,7 @@ import Relaxation from './app/relaxation';
 import Journal from './app/journal';
 import Profile from './app/pp';
 import Reminders from './app/rem';
-
+import NP from './app/np';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -60,6 +60,7 @@ export default function App() {
         <Stack.Screen name ="Relaxation" component={Relaxation}/>
         <Stack.Screen name="Profile" component={Profile}/>
         <Stack.Screen name="Reminders" component={Reminders}/>
+        <Stack.Screen name="np" component={NP}/>
 
       </Stack.Navigator>
     </NavigationContainer>

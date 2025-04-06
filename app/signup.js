@@ -49,7 +49,7 @@ export default function Signup() {
       return;
     }
     
-    if (!validatePhoneNumber(phnno)) {
+    if (!validatePhoneNumber(phnno)) {    
       setError("Phone number must be exactly 10 digits");
       return;
     }

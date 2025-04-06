@@ -14,13 +14,10 @@ export default function Tasks() {
   useEffect(() => {
     console.log(uid);
     const fetchTasks = async () => {
-
       if (!uid) {
         alert("User is not found!");
         return;
       }
-  
-      // Fetch answers from 'qnn' table
       const { data: answers, error: ansError } = await supabase
         .from('qnn')
         .select('qnsno, ansnum')
@@ -35,14 +32,11 @@ export default function Tasks() {
   
       if (answers.length === 0) return;
   
-      // 🔥 Split into smaller batches to avoid 400 error
-      const chunkSize = 5; // Adjust this if needed
+      const chunkSize = 5;
       let suggestedTasks = [];
   
       for (let i = 0; i < answers.length; i += chunkSize) {
         const chunk = answers.slice(i, i + chunkSize);
-      
-        // Fixing the OR condition syntax
         const orCondition = chunk
           .map(a => `and(qnno.eq.${a.qnsno},opnum.eq.${a.ansnum})`)
           .join(',');
@@ -61,7 +55,6 @@ export default function Tasks() {
       }
       console.log("Fetched suggested tasks:", suggestedTasks);
   
-      // Fetch existing tasks
       const { data: existingTasks, error: fetchError } = await supabase
         .from('tasks')
         .select('tid, title, status')
@@ -74,14 +67,12 @@ export default function Tasks() {
   
       console.log("Existing tasks:", existingTasks);
   
-      // Filter out already existing tasks
       const newTasks = suggestedTasks.filter(sTask =>
         !existingTasks.some(eTask => eTask.tid === sTask.tid)
       ).map(task => ({ tid: task.tid, uid, title: task.task, status: 'pending' }));
   
       console.log("New tasks to insert:", newTasks);
   
-      // Insert new tasks only if they don't exist
       if (newTasks.length > 0) {
         const { error: insertError } = await supabase.from('tasks').insert(newTasks);
         if (insertError) {
@@ -90,15 +81,12 @@ export default function Tasks() {
         }
       }
   
-      // Update state
       setTasks([...existingTasks, ...newTasks]);
     };
   
     fetchTasks();
   }, [uid]);
-  
-  
- 
+
   const addTask = async () => {
     if (newTask.trim() === '' || !uid) return;
     const { data, error } = await supabase
@@ -137,6 +125,8 @@ export default function Tasks() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Tasks</Text>
+      <Text style={styles.quote}>“Small steps every day lead to big results.”</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Add a new task..."
@@ -146,6 +136,7 @@ export default function Tasks() {
       <TouchableOpacity style={styles.addButton} onPress={addTask}>
         <Text style={styles.addButtonText}>Add Task</Text>
       </TouchableOpacity>
+
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.tid.toString()}
@@ -167,6 +158,7 @@ export default function Tasks() {
           </View>
         )}
       />
+
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Homepage")}>
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
@@ -176,13 +168,28 @@ export default function Tasks() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: 'white' },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 10, textAlign: 'center', color: 'black' },
+  quote: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: 'purple',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
   input: { borderWidth: 1, borderColor: 'gray', borderRadius: 8, padding: 10, marginBottom: 10, color: 'black' },
   addButton: { backgroundColor: '#1E90FF', padding: 10, borderRadius: 8, alignItems: 'center', marginBottom: 20 },
   addButtonText: { color: 'white', fontWeight: 'bold' },
   taskItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
   taskText: { color: 'black', flex: 1, marginLeft: 10 },
   completedTask: { textDecorationLine: 'line-through', color: 'gray' },
-  backButton: { marginTop: 20, backgroundColor: '#87CEEB', padding: 10, borderRadius: 8, alignItems: 'center' },
+  backButton: {
+    marginTop: 20,
+    backgroundColor: '#87CEEB',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'flex-end',
+    alignSelf: 'flex-end',
+    paddingHorizontal: 20,
+  },
   backButtonText: { color: 'white', fontWeight: 'bold' },
 });

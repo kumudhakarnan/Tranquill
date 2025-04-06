@@ -86,7 +86,7 @@ export default function Hp() {
       </Animated.View>
 
       <View style={styles.moodContainer}>
-        <Text style={styles.moodText}>CHOOSE YOUR FACE!</Text>
+        <Text style={styles.moodText}>CLICK YOUR FACE!</Text>
         
         <View style={styles.moodRow}>
         <Slider
@@ -122,8 +122,8 @@ export default function Hp() {
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Reminders")}>
-          <MaterialIcons name="notifications" size={30} color="white" />
-          <Text style={styles.navText}>Reminders</Text>
+        <Text style={{ fontSize: 30 }}>😇</Text>
+          <Text style={styles.navText}>Thoughts</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Journal", { uid } )}>
           <FontAwesome5 name="book" size={25} color="white" />
@@ -136,6 +136,11 @@ export default function Hp() {
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("Tasks", { uid } )}>
           <MaterialIcons name="assignment" size={30} color="white" />
           <Text style={styles.navText}>Tasks</Text>
+        </TouchableOpacity>
+        {/* New Map Icon */}
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate("np")}>
+          <FontAwesome5 name="map-marked-alt" size={25} color="white" />
+          <Text style={styles.navText}>Places</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -187,16 +192,14 @@ const styles = StyleSheet.create({
   
   moodContainer: {
     position: 'absolute', 
-    top: 80, // Move below navbar
+    top: 80, 
     width: '50%', 
     alignItems: 'center', 
-    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Transparent White
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', 
     padding: 12, 
     borderRadius: 12, 
     elevation: 3,
-  },
-  
-  moodRow: {
+  }, moodRow: {
     flexDirection: 'row',  // Align slider & emoji in a row
     alignItems: 'center',
     justifyContent: 'center',
@@ -221,6 +224,7 @@ const styles = StyleSheet.create({
   },
  
 
+
   bottomNav: {
     position: 'absolute',
     bottom: 0,
@@ -231,12 +235,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
   },
-  navItem: {
-    alignItems: 'center',
-  },
-  navText: {
-    fontSize: 12,
-    color: 'white',
-    marginTop: 4,
-  },
-}); 
+});

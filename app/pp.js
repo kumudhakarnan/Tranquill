@@ -74,7 +74,7 @@ export default function Profile() {
       </TouchableOpacity>
 
       <Text style={styles.title}>Your Profile</Text>
-
+      <Text style ={styles.tt}>Wanna change the info ? </Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Name</Text>
         <TextInput
@@ -145,6 +145,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  tt:{
+      fontSize:20,
+      color:'red',
   },
   inputContainer: {
     width: '100%',
